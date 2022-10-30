@@ -1,55 +1,44 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+name: Node.js CI/CD
 
-name: Build and deploy Node.js app to Azure Web App - arexNextJs
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+on: [push] # tells github to run this on any push to the repository
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test: # names the job
+    runs-on: ubuntu-latest # sets the version of linux we want to use, should be what you have on your server
+
+    strategy:
+      fail-fast: false # tells github to not run further steps if this one fails
+      matrix:
+        node-version: [16.x] # sets the version of node we want to use, should be what you have on your server
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js version
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2 # fetches your commit to test it
+      - name: Use Node.js ${{ matrix.node-version }} # names our step
+        uses: actions/setup-node@v1 # downloads node and npm
         with:
-          node-version: '18.x'
-
-      - name: npm install, build
-        run: |
-          npm install
-          npm run build --if-present
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: node-app
-          path: .
+          node-version: ${{ matrix.node-version }}
+      - run: npm install # installs your dependencies
+      - run: npm run test # builds your app
+      - run: npm test # runs your test suite
+        env:
+          CI: true # shows terminal output!
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+    needs: test # this job depends on "test" having finished
+    if: github.ref == 'refs/heads/master' # we tell Github to only execute this step if we're on our master branch (so we don't put unfinished branches in production)
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: node-app
-
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'arexNextJs'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_21D084E1BCFC41EEAB397A0696205327 }}
-          package: .
+      - name: Deploying to Digitalocean droplet
+        uses: appleboy/ssh-action@master # An action made to control Linux servers
+        with: # We set all our secrets here for the action, these won't be shown in the action logs
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd nextapp # we move into our app's folder
+            git pull # we pull any changes from git
+            npm prune # we remove any unused dependencies
+            npm install # we install any missing dependencies
+            npm run build # we build our app
+            pm2 reload all # we reload the app via PM2
