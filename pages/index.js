@@ -63,6 +63,7 @@ export default function Home() {
         Divide
       </button>
       <button>Hello</button>
+      <input></input>
     </div>
   );
 }
