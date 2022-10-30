@@ -41,4 +41,5 @@ jobs:
             sudo npm prune # we remove any unused dependencies
             npm install # we install any missing dependencies
             sudo npm run build # we build our app
+            sudo pm2 start
             sudo pm2 reload all # we reload the app via PM2
