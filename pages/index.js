@@ -64,6 +64,7 @@ export default function Home() {
       </button>
       <button>Hello</button>
       <input></input>
+      <button>Hello</button>
     </div>
   );
 }
