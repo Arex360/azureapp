@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
+import stupid
 export default function Home() {
   const [num1, setNum1] = useState(0);
   const [num2, setNum2] = useState(0);
