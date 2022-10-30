@@ -25,6 +25,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Deploying to Digitalocean droplet
         uses: appleboy/ssh-action@master # An action made to control Linux servers
