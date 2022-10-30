@@ -27,6 +27,8 @@ export default function Home() {
       </Head>
       <div data-testid="result">
         <p>Hello Owais!!!</p>
+        <input></input>
+        <button>Click</button>
       </div>
      </div>
   );
