@@ -26,7 +26,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div data-testid="result">
-        <p>Hello</p>
+        <p>Hello guys</p>
       </div>
      </div>
   );
