@@ -62,6 +62,7 @@ export default function Home() {
       <button onClick={divide} className={styles.button} data-testid="divide">
         Divide
       </button>
+      <button>Hello</button>
     </div>
   );
 }

@@ -1,15 +1,15 @@
 name: Node.js CI/CD
 
-on: [push] # tells github to run this on any push to the repository
+on: [push] 
 
 jobs:
-  test: # names the job
-    runs-on: ubuntu-latest # sets the version of linux we want to use, should be what you have on your server
+  test: 
+    runs-on: ubuntu-latest 
 
     strategy:
-      fail-fast: false # tells github to not run further steps if this one fails
+      fail-fast: false 
       matrix:
-        node-version: [16.x] # sets the version of node we want to use, should be what you have on your server
+        node-version: [16.x] 
 
     steps:
       - uses: actions/checkout@v2 # fetches your commit to test it
@@ -36,7 +36,7 @@ jobs:
           script: |
             cd nextapp # we move into our app's folder
             git pull # we pull any changes from git
-            npm prune # we remove any unused dependencies
+            sudo npm prune # we remove any unused dependencies
             npm install # we install any missing dependencies
-            npm run build # we build our app
-            pm2 reload all # we reload the app via PM2
+            sudo npm run build # we build our app
+            sudo pm2 reload all # we reload the app via PM2
